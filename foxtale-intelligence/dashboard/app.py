@@ -332,6 +332,7 @@ with st.sidebar:
         "04 · Category Analysis",
         "05 · White Space Opportunities",
         "06 · Strategic Recommendations",
+        "07 · Opportunity Score",
     ]:
         st.markdown(
             f"<div style='font-size:12px; color:#CCCCDD; padding:4px 0;'>→ {section}</div>",
@@ -1168,6 +1169,253 @@ for rec in recommendations:
 """,
         unsafe_allow_html=True,
     )
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SECTION 7 — OPPORTUNITY SCORE
+# ══════════════════════════════════════════════════════════════════════════════
+st.markdown('<div class="section-header">07 · OPPORTUNITY SCORE</div>', unsafe_allow_html=True)
+
+st.markdown("""
+<div class="insight-box">
+<strong>Scoring Model:</strong> &nbsp;
+<code>Opportunity Score = Growth Potential × Competitor Weakness × Foxtale Absence</code>
+&nbsp; (each factor scored 1–10, composite normalised to 1–100)<br><br>
+<span style="color:#6B6B6B; font-size:13px;">
+<strong>Growth Potential</strong> — breadth of brands competing, total SKU volume, avg review depth &nbsp;|&nbsp;
+<strong>Competitor Weakness</strong> — market fragmentation (HHI), discount pressure, inverted avg rating &nbsp;|&nbsp;
+<strong>Foxtale Absence</strong> — inverse of Foxtale's current SKU share in the category
+</span>
+</div>
+""", unsafe_allow_html=True)
+
+# ── Compute scores ──────────────────────────────────────────────────────────
+def _minmax(s, lo=1.0, hi=10.0):
+    mn, mx = s.min(), s.max()
+    if mx == mn:
+        return pd.Series([hi] * len(s), index=s.index)
+    return lo + (s - mn) / (mx - mn) * (hi - lo)
+
+def _hhi(grp):
+    shares = grp.value_counts(normalize=True)
+    return float((shares ** 2).sum())
+
+@st.cache_data
+def compute_opportunity(dataframe):
+    cat = dataframe.groupby("category").agg(
+        total_skus    = ("product_name", "count"),
+        num_brands    = ("brand",        "nunique"),
+        foxtale_skus  = ("brand",        lambda x: (x == "Foxtale").sum()),
+        avg_price     = ("price",        "mean"),
+        avg_rating    = ("rating",       "mean"),
+        avg_reviews   = ("review_count", "mean"),
+        avg_discount  = ("discount",     "mean"),
+    ).copy()
+
+    comp = dataframe[dataframe["brand"] != "Foxtale"]
+    cat["hhi"] = comp.groupby("category")["brand"].apply(_hhi).reindex(cat.index).fillna(1.0)
+    cat["comp_avg_rating"] = comp.groupby("category")["rating"].mean().reindex(cat.index).fillna(cat["avg_rating"])
+    cat["foxtale_share"]   = cat["foxtale_skus"] / cat["total_skus"]
+
+    # Growth Potential
+    cat["growth_potential"] = (
+        0.40 * _minmax(cat["num_brands"]) +
+        0.35 * _minmax(cat["total_skus"]) +
+        0.25 * _minmax(cat["avg_reviews"])
+    )
+    # Competitor Weakness
+    cat["competitor_weakness"] = (
+        0.40 * _minmax(1 - cat["hhi"]) +
+        0.35 * _minmax(cat["avg_discount"]) +
+        0.25 * _minmax(cat["comp_avg_rating"].max() - cat["comp_avg_rating"])
+    )
+    # Foxtale Absence
+    cat["foxtale_absence"] = 1 + (1 - cat["foxtale_share"]) * 9
+
+    raw = cat["growth_potential"] * cat["competitor_weakness"] * cat["foxtale_absence"]
+    lo, hi = raw.min(), raw.max()
+    cat["opportunity_score"] = (1 + (raw - lo) / (hi - lo) * 99).round(1)
+    cat = cat.sort_values("opportunity_score", ascending=False)
+    cat.insert(0, "rank", range(1, len(cat) + 1))
+
+    def _tier(s):
+        if s >= 75: return "🔴 Immediate Priority"
+        if s >= 50: return "🟠 High Opportunity"
+        if s >= 25: return "🟡 Monitor"
+        return "🟢 Defended"
+
+    cat["priority_tier"] = cat["opportunity_score"].apply(_tier)
+    return cat.reset_index()
+
+opp = compute_opportunity(df)
+
+# ── Top KPI strip ────────────────────────────────────────────────────────────
+c1, c2, c3, c4 = st.columns(4)
+immediate = opp[opp["opportunity_score"] >= 75]
+high      = opp[(opp["opportunity_score"] >= 50) & (opp["opportunity_score"] < 75)]
+absent    = opp[opp["foxtale_skus"] == 0]
+top_cat   = opp.iloc[0]
+
+with c1:
+    st.markdown(f"""<div class="metric-card">
+        <div class="label">TOP OPPORTUNITY</div>
+        <div class="value" style="font-size:22px;">{top_cat['category']}</div>
+        <div class="delta">{top_cat['opportunity_score']:.0f} / 100</div>
+    </div>""", unsafe_allow_html=True)
+with c2:
+    st.markdown(f"""<div class="metric-card">
+        <div class="label">IMMEDIATE PRIORITY</div>
+        <div class="value">{len(immediate)}</div>
+        <div class="delta">Score ≥ 75</div>
+    </div>""", unsafe_allow_html=True)
+with c3:
+    st.markdown(f"""<div class="metric-card">
+        <div class="label">HIGH OPPORTUNITY</div>
+        <div class="value">{len(high)}</div>
+        <div class="delta">Score 50–74</div>
+    </div>""", unsafe_allow_html=True)
+with c4:
+    st.markdown(f"""<div class="metric-card">
+        <div class="label">ZERO-PRESENCE CATS</div>
+        <div class="value">{len(absent)}</div>
+        <div class="delta">Foxtale SKUs = 0</div>
+    </div>""", unsafe_allow_html=True)
+
+st.markdown("<br>", unsafe_allow_html=True)
+
+# ── Ranked table ─────────────────────────────────────────────────────────────
+opp_display = opp[[
+    "rank", "category", "priority_tier", "opportunity_score",
+    "growth_potential", "competitor_weakness", "foxtale_absence",
+    "num_brands", "total_skus", "foxtale_skus", "avg_price", "avg_rating"
+]].copy()
+opp_display.columns = [
+    "Rank", "Category", "Priority Tier", "Opportunity Score",
+    "Growth Potential", "Competitor Weakness", "Foxtale Absence",
+    "# Brands", "Total SKUs", "Foxtale SKUs", "Avg Price ₹", "Avg Rating"
+]
+
+st.dataframe(
+    opp_display,
+    use_container_width=True,
+    hide_index=True,
+    column_config={
+        "Opportunity Score": st.column_config.ProgressColumn(
+            "Opportunity Score", min_value=0, max_value=100, format="%.1f"
+        ),
+        "Growth Potential": st.column_config.NumberColumn(format="%.2f"),
+        "Competitor Weakness": st.column_config.NumberColumn(format="%.2f"),
+        "Foxtale Absence": st.column_config.NumberColumn(format="%.2f"),
+        "Avg Price ₹": st.column_config.NumberColumn(format="₹%.0f"),
+        "Avg Rating": st.column_config.NumberColumn(format="%.2f"),
+    }
+)
+
+st.markdown("<br>", unsafe_allow_html=True)
+
+# ── Waterfall / bar chart of scores ─────────────────────────────────────────
+col_a, col_b = st.columns([3, 2])
+
+with col_a:
+    tier_color_map = {
+        "🔴 Immediate Priority": COLORS["accent"],
+        "🟠 High Opportunity":   "#E8A838",
+        "🟡 Monitor":            "#F1C40F",
+        "🟢 Defended":           COLORS["positive"],
+    }
+    bar_colors = [tier_color_map.get(t, COLORS["foxtale"]) for t in opp["priority_tier"]]
+
+    fig_scores = go.Figure(go.Bar(
+        y=opp["category"],
+        x=opp["opportunity_score"],
+        orientation="h",
+        marker_color=bar_colors,
+        text=[f"{s:.1f}" for s in opp["opportunity_score"]],
+        textposition="outside",
+        hovertemplate="<b>%{y}</b><br>Score: %{x:.1f}<extra></extra>",
+    ))
+    fig_scores.update_layout(
+        title=dict(text="Opportunity Score by Category", font=dict(size=14, color=COLORS["text_primary"])),
+        xaxis=dict(title="Score (1–100)", range=[0, 115], showgrid=True, gridcolor="#F0F0F0"),
+        yaxis=dict(autorange="reversed", tickfont=dict(size=12)),
+        plot_bgcolor="white", paper_bgcolor="white",
+        font_family="Inter",
+        margin=dict(l=20, r=40, t=40, b=20),
+        height=380,
+        showlegend=False,
+    )
+    # Reference line at 50
+    fig_scores.add_vline(x=50, line_dash="dash", line_color=COLORS["text_secondary"], line_width=1,
+                         annotation_text="Threshold 50", annotation_position="top")
+    st.plotly_chart(fig_scores, use_container_width=True)
+
+with col_b:
+    # Radar / spider chart for top 3 categories across the 3 sub-scores
+    top3 = opp.head(3)
+    theta = ["Growth Potential", "Competitor Weakness", "Foxtale Absence", "Growth Potential"]
+    radar_colors = [COLORS["accent"], "#E8A838", COLORS["foxtale"]]
+    fig_radar = go.Figure()
+    for i, (_, row) in enumerate(top3.iterrows()):
+        vals = [row["growth_potential"], row["competitor_weakness"], row["foxtale_absence"],
+                row["growth_potential"]]
+        fig_radar.add_trace(go.Scatterpolar(
+            r=vals, theta=theta, fill="toself",
+            name=row["category"],
+            line_color=radar_colors[i],
+            fillcolor=radar_colors[i],
+            opacity=0.25,
+        ))
+    fig_radar.update_layout(
+        title=dict(text="Sub-Score Profile — Top 3 Categories", font=dict(size=14, color=COLORS["text_primary"])),
+        polar=dict(radialaxis=dict(visible=True, range=[0, 10], gridcolor="#E0E0E0"),
+                   angularaxis=dict(gridcolor="#E0E0E0")),
+        paper_bgcolor="white",
+        font_family="Inter",
+        legend=dict(orientation="h", y=-0.15),
+        margin=dict(l=20, r=20, t=40, b=40),
+        height=380,
+    )
+    st.plotly_chart(fig_radar, use_container_width=True)
+
+# ── Factor decomposition stacked bar ─────────────────────────────────────────
+st.markdown("**Score Decomposition — Contribution of Each Factor**")
+fig_stack = go.Figure()
+for factor, color, label in [
+    ("growth_potential",    "#4A90D9", "Growth Potential"),
+    ("competitor_weakness", COLORS["accent"], "Competitor Weakness"),
+    ("foxtale_absence",     COLORS["foxtale"], "Foxtale Absence"),
+]:
+    fig_stack.add_trace(go.Bar(
+        name=label,
+        x=opp["category"],
+        y=opp[factor],
+        marker_color=color,
+        hovertemplate=f"<b>%{{x}}</b><br>{label}: %{{y:.2f}}<extra></extra>",
+    ))
+fig_stack.update_layout(
+    barmode="group",
+    xaxis=dict(tickangle=-30),
+    yaxis=dict(title="Sub-Score (1–10)", showgrid=True, gridcolor="#F0F0F0"),
+    plot_bgcolor="white", paper_bgcolor="white",
+    font_family="Inter",
+    legend=dict(orientation="h", y=1.08),
+    margin=dict(l=20, r=20, t=20, b=60),
+    height=320,
+)
+st.plotly_chart(fig_stack, use_container_width=True)
+
+st.markdown("""
+<div class="insight-box">
+<strong>Reading the scores:</strong>
+Serum (100) and Sunscreen (84.9) top the list not because Foxtale is absent — it competes in both —
+but because they combine massive market breadth (5 brands, 88 and 37 SKUs respectively), high review depth,
+and a fragmented competitive field where no single brand dominates.
+The implication: Foxtale's depth in Serum and Sunscreen is still insufficient relative to opportunity size.
+<br><br>
+Mask (41.9), Body Care (35.9), and Lip Care (19.3) score lower on Growth Potential because fewer brands
+currently compete there — but they carry full Foxtale Absence scores (10.0), meaning every point of entry
+is incremental, uncontested revenue.
+</div>
+""", unsafe_allow_html=True)
 
 # ─── FOOTER ─────────────────────────────────────────────────────────────────────
 st.markdown("""
