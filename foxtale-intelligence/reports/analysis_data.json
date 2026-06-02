@@ -1,0 +1,213 @@
+{
+  "total_products": 334,
+  "brands": {
+    "Dot & Key": {
+      "total_skus": 70,
+      "categories": [
+        "Body Care",
+        "Lip Care",
+        "Cleanser",
+        "Serum",
+        "Mask",
+        "Sunscreen",
+        "Moisturiser",
+        "Eye Care",
+        "Toner"
+      ],
+      "num_categories": 9,
+      "avg_price": 763.57,
+      "median_price": 745.0,
+      "min_price": 295.0,
+      "max_price": 1795.0,
+      "avg_rating": 4.351,
+      "median_rating": 4.35,
+      "products_above_45": 9
+    },
+    "Foxtale": {
+      "total_skus": 45,
+      "categories": [
+        "Cleanser",
+        "Serum",
+        "Sunscreen",
+        "Moisturiser",
+        "Toner",
+        "Eye Care"
+      ],
+      "num_categories": 6,
+      "avg_price": 962.78,
+      "median_price": 895.0,
+      "min_price": 595.0,
+      "max_price": 1495.0,
+      "avg_rating": 4.433,
+      "median_rating": 4.4,
+      "products_above_45": 20
+    },
+    "Minimalist": {
+      "total_skus": 54,
+      "categories": [
+        "Cleanser",
+        "Serum",
+        "Sunscreen",
+        "Moisturiser",
+        "Toner",
+        "Peel"
+      ],
+      "num_categories": 6,
+      "avg_price": 439.74,
+      "median_price": 449.0,
+      "min_price": 199.0,
+      "max_price": 699.0,
+      "avg_rating": 4.346,
+      "median_rating": 4.35,
+      "products_above_45": 12
+    },
+    "Plum": {
+      "total_skus": 101,
+      "categories": [
+        "Body Care",
+        "Lip Care",
+        "Cleanser",
+        "Serum",
+        "Mask",
+        "Sunscreen",
+        "Hair Care",
+        "Moisturiser",
+        "Toner",
+        "Eye Care"
+      ],
+      "num_categories": 10,
+      "avg_price": 516.98,
+      "median_price": 445.0,
+      "min_price": 175.0,
+      "max_price": 995.0,
+      "avg_rating": 4.36,
+      "median_rating": 4.4,
+      "products_above_45": 11
+    },
+    "The Derma Co": {
+      "total_skus": 64,
+      "categories": [
+        "Cleanser",
+        "Serum",
+        "Mask",
+        "Sunscreen",
+        "Moisturiser",
+        "Eye Care",
+        "Toner",
+        "Peel"
+      ],
+      "num_categories": 8,
+      "avg_price": 626.34,
+      "median_price": 599.0,
+      "min_price": 349.0,
+      "max_price": 1299.0,
+      "avg_rating": 4.359,
+      "median_rating": 4.4,
+      "products_above_45": 9
+    }
+  },
+  "whitespace_gaps": [
+    {
+      "category": "Mask",
+      "competitor_brands": 3,
+      "competitor_skus": 19,
+      "foxtale_skus": 0
+    }
+  ],
+  "category_competition": {
+    "Body Care": {
+      "total_skus": 30,
+      "brands_present": [
+        "Dot & Key",
+        "Plum"
+      ]
+    },
+    "Cleanser": {
+      "total_skus": 35,
+      "brands_present": [
+        "Foxtale",
+        "Minimalist",
+        "The Derma Co",
+        "Dot & Key",
+        "Plum"
+      ]
+    },
+    "Eye Care": {
+      "total_skus": 22,
+      "brands_present": [
+        "The Derma Co",
+        "Foxtale",
+        "Dot & Key",
+        "Plum"
+      ]
+    },
+    "Hair Care": {
+      "total_skus": 11,
+      "brands_present": [
+        "Plum"
+      ]
+    },
+    "Lip Care": {
+      "total_skus": 10,
+      "brands_present": [
+        "Dot & Key",
+        "Plum"
+      ]
+    },
+    "Mask": {
+      "total_skus": 19,
+      "brands_present": [
+        "The Derma Co",
+        "Dot & Key",
+        "Plum"
+      ]
+    },
+    "Moisturiser": {
+      "total_skus": 43,
+      "brands_present": [
+        "Foxtale",
+        "Minimalist",
+        "The Derma Co",
+        "Dot & Key",
+        "Plum"
+      ]
+    },
+    "Peel": {
+      "total_skus": 4,
+      "brands_present": [
+        "The Derma Co",
+        "Minimalist"
+      ]
+    },
+    "Serum": {
+      "total_skus": 88,
+      "brands_present": [
+        "Foxtale",
+        "Minimalist",
+        "The Derma Co",
+        "Dot & Key",
+        "Plum"
+      ]
+    },
+    "Sunscreen": {
+      "total_skus": 37,
+      "brands_present": [
+        "Foxtale",
+        "Minimalist",
+        "The Derma Co",
+        "Dot & Key",
+        "Plum"
+      ]
+    },
+    "Toner": {
+      "total_skus": 35,
+      "brands_present": [
+        "Foxtale",
+        "Minimalist",
+        "The Derma Co",
+        "Dot & Key",
+        "Plum"
+      ]
+    }
+  }
+}
