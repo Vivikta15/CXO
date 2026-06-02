@@ -267,6 +267,304 @@ html, body, [class*="css"] {
     font-style: italic;
 }
 
+/* ── Hero Section ──────────────────────────────────────────────────────── */
+.hero-wrapper {
+    background: linear-gradient(135deg, #1A1A2E 0%, #16213E 60%, #0F3460 100%);
+    border-radius: 16px;
+    padding: 48px 52px 40px 52px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-wrapper::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(192,57,43,0.18) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.hero-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -40px;
+    width: 260px; height: 260px;
+    background: radial-gradient(circle, rgba(74,144,217,0.12) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.hero-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #C0392B;
+    margin-bottom: 10px;
+}
+
+.hero-title {
+    font-size: 34px;
+    font-weight: 800;
+    color: #FFFFFF;
+    line-height: 1.15;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+}
+
+.hero-subtitle {
+    font-size: 15px;
+    font-weight: 400;
+    color: #A8B2CC;
+    margin-bottom: 20px;
+    line-height: 1.6;
+    max-width: 640px;
+}
+
+.hero-tagline {
+    font-size: 13px;
+    font-style: italic;
+    color: #7B8DB0;
+    margin-bottom: 28px;
+    padding-left: 12px;
+    border-left: 3px solid #C0392B;
+}
+
+.hero-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    margin: 24px 0;
+}
+
+.analyst-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 40px;
+    padding: 8px 16px 8px 10px;
+}
+
+.analyst-avatar {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, #C0392B, #E74C3C);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800; color: #fff;
+    flex-shrink: 0;
+}
+
+.analyst-info-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: #FFFFFF;
+    line-height: 1.2;
+}
+
+.analyst-info-title {
+    font-size: 10px;
+    color: #7B8DB0;
+    letter-spacing: 0.04em;
+}
+
+.hero-meta {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.hero-meta-item {
+    font-size: 11px;
+    color: #7B8DB0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* ── Hero KPI cards ────────────────────────────────────────────────────── */
+.hero-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 32px;
+}
+
+.hero-kpi-card {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 22px 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    border-top: 3px solid #1A1A2E;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-kpi-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 60px; height: 60px;
+    background: radial-gradient(circle, rgba(26,26,46,0.04) 0%, transparent 70%);
+}
+
+.hero-kpi-card.accent { border-top-color: #C0392B; }
+.hero-kpi-card.blue   { border-top-color: #4A90D9; }
+.hero-kpi-card.green  { border-top-color: #27AE60; }
+
+.hero-kpi-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #6B6B6B;
+    margin-bottom: 8px;
+}
+
+.hero-kpi-value {
+    font-size: 40px;
+    font-weight: 800;
+    color: #1A1A2E;
+    line-height: 1;
+    margin-bottom: 6px;
+}
+
+.hero-kpi-desc {
+    font-size: 12px;
+    color: #6B6B6B;
+    line-height: 1.4;
+}
+
+.hero-kpi-icon {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+/* ── Executive Recommendation Cards ───────────────────────────────────── */
+.exec-rec-card {
+    background: #FFFFFF;
+    border: 1px solid #E8E8E8;
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s ease;
+}
+
+.exec-rec-card:hover {
+    box-shadow: 0 6px 24px rgba(0,0,0,0.09);
+}
+
+.exec-rec-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 5px; height: 100%;
+    border-radius: 12px 0 0 12px;
+}
+
+.exec-rec-card.priority-high::before  { background: #C0392B; }
+.exec-rec-card.priority-med::before   { background: #E8A838; }
+.exec-rec-card.priority-low::before   { background: #27AE60; }
+
+.exec-rec-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    gap: 16px;
+}
+
+.exec-rec-number {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #AAAAAA;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.exec-rec-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #1A1A2E;
+    line-height: 1.2;
+}
+
+.priority-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.priority-badge.high  { background: #FEF0EE; color: #C0392B; border: 1px solid #F5C6BF; }
+.priority-badge.med   { background: #FFF8E7; color: #B7770D; border: 1px solid #F5E4A8; }
+.priority-badge.low   { background: #EAFAF1; color: #1A7A43; border: 1px solid #B7E4C7; }
+
+.exec-rec-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.exec-rec-block-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #AAAAAA;
+    margin-bottom: 5px;
+}
+
+.exec-rec-block-text {
+    font-size: 13px;
+    color: #333333;
+    line-height: 1.55;
+}
+
+.exec-rec-data-pill {
+    display: inline-block;
+    background: #F0F4FF;
+    color: #1A1A2E;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin: 3px 3px 3px 0;
+}
+
+.exec-rec-impact {
+    background: #F8FFF8;
+    border: 1px solid #D4EDDA;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #1A7A43;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+/* ── Section separator ─────────────────────────────────────────────────── */
+.section-sep {
+    height: 1px;
+    background: linear-gradient(90deg, #1A1A2E 0%, #E8E8E8 60%, transparent 100%);
+    margin: 36px 0 28px 0;
+    opacity: 0.25;
+}
+
 .footer {
     text-align: center;
     font-size: 11px;
@@ -425,6 +723,65 @@ total_skus = len(df)
 avg_peer_skus = peers_df.groupby("brand").size().mean()
 foxtale_peer_median = peers_df["price"].median()
 foxtale_sku_count = len(foxtale_df)
+
+# ══════════════════════════════════════════════════════════════════════════════
+# HERO SECTION
+# ══════════════════════════════════════════════════════════════════════════════
+st.markdown(f"""
+<div class="hero-wrapper">
+  <div class="hero-eyebrow">Competitive Intelligence &nbsp;·&nbsp; D2C Skincare &nbsp;·&nbsp; India</div>
+  <div class="hero-title">Foxtale Competitive Intelligence<br>Command Center</div>
+  <div class="hero-subtitle">
+    Competitive benchmarking across Foxtale, Minimalist, Dot&nbsp;&amp;&nbsp;Key, Plum, and The Derma Co.
+  </div>
+  <div class="hero-tagline">
+    An intelligence system designed to identify competitive threats, category opportunities, and growth levers for Foxtale.
+  </div>
+  <div class="hero-divider"></div>
+  <div class="hero-meta">
+    <div class="analyst-badge">
+      <div class="analyst-avatar">V</div>
+      <div>
+        <div class="analyst-info-name">Vivikta Kona</div>
+        <div class="analyst-info-title">MBA Candidate &nbsp;·&nbsp; Prepared for Foxtale Leadership</div>
+      </div>
+    </div>
+    <div class="hero-meta-item">📅 June 2026</div>
+    <div class="hero-meta-item">📊 {len(df_all)} products analysed</div>
+    <div class="hero-meta-item">🏷️ {df_all['brand'].nunique()} brands tracked</div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+# ── Hero KPI cards ─────────────────────────────────────────────────────────
+st.markdown(f"""
+<div class="hero-kpi-grid">
+  <div class="hero-kpi-card">
+    <div class="hero-kpi-icon">🏢</div>
+    <div class="hero-kpi-label">Total Brands Tracked</div>
+    <div class="hero-kpi-value">{df_all['brand'].nunique()}</div>
+    <div class="hero-kpi-desc">Foxtale + 4 direct competitors</div>
+  </div>
+  <div class="hero-kpi-card accent">
+    <div class="hero-kpi-icon">📦</div>
+    <div class="hero-kpi-label">Total SKUs Analyzed</div>
+    <div class="hero-kpi-value">{len(df_all)}</div>
+    <div class="hero-kpi-desc">Across {len(all_categories)} product categories</div>
+  </div>
+  <div class="hero-kpi-card blue">
+    <div class="hero-kpi-icon">🗂️</div>
+    <div class="hero-kpi-label">Categories Covered</div>
+    <div class="hero-kpi-value">{len(all_categories)}</div>
+    <div class="hero-kpi-desc">Foxtale active in {len(foxtale_cats)} of {len(all_categories)}</div>
+  </div>
+  <div class="hero-kpi-card green">
+    <div class="hero-kpi-icon">🎯</div>
+    <div class="hero-kpi-label">High-Potential White Spaces</div>
+    <div class="hero-kpi-value">{whitespace_count}</div>
+    <div class="hero-kpi-desc">Zero-presence categories with competitor demand</div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
 
 # ══════════════════════════════════════════════════════════════════════════════
 # SECTION 1 — EXECUTIVE SUMMARY
@@ -1438,9 +1795,161 @@ is incremental, uncontested revenue.
 </div>
 """, unsafe_allow_html=True)
 
+# ══════════════════════════════════════════════════════════════════════════════
+# EXECUTIVE RECOMMENDATIONS
+# ══════════════════════════════════════════════════════════════════════════════
+st.markdown('<div class="section-sep"></div>', unsafe_allow_html=True)
+st.markdown('<div class="section-header">08 · EXECUTIVE RECOMMENDATIONS</div>', unsafe_allow_html=True)
+
+st.markdown("""
+<div class="insight-box" style="margin-bottom:24px;">
+  <h4>How to read these recommendations</h4>
+  <ul>
+    <li>Each recommendation is grounded in the competitive data analysed across 334 SKUs and 5 brands.</li>
+    <li>Priority levels reflect a composite of revenue impact, ease of execution, and competitive whitespace.</li>
+    <li>Supporting data points are drawn directly from the Opportunity Score model and category analysis above.</li>
+  </ul>
+</div>
+""", unsafe_allow_html=True)
+
+# Compute supporting data points live from the CSV
+body_care_comp_skus   = int(len(df_all[(df_all["category"] == "Body Care") & (df_all["brand"] != "Foxtale")]))
+body_care_brands      = int(df_all[df_all["category"] == "Body Care"]["brand"].nunique())
+serum_foxtale_rating  = round(float(df_all[(df_all["category"] == "Serum") & (df_all["brand"] == "Foxtale")]["rating"].mean()), 2) if len(df_all[(df_all["category"] == "Serum") & (df_all["brand"] == "Foxtale")]) > 0 else 0
+serum_comp_skus       = int(len(df_all[(df_all["category"] == "Serum") & (df_all["brand"] != "Foxtale")]))
+plum_skus             = int(len(df_all[df_all["brand"] == "Plum"]))
+foxtale_skus_count    = int(len(df_all[df_all["brand"] == "Foxtale"]))
+sku_gap               = plum_skus - foxtale_skus_count
+
+st.markdown(f"""
+
+<!-- ── Recommendation 1: Expand into Body Care ───────────────────────── -->
+<div class="exec-rec-card priority-high">
+  <div class="exec-rec-header">
+    <div>
+      <div class="exec-rec-number">Recommendation 01</div>
+      <div class="exec-rec-title">Expand into Body Care</div>
+    </div>
+    <div class="priority-badge high">🔴 High Priority</div>
+  </div>
+  <div class="exec-rec-grid">
+    <div>
+      <div class="exec-rec-block-label">Why It Matters</div>
+      <div class="exec-rec-block-text">
+        Competitors have stronger participation and broader SKU presence in Body Care while Foxtale has
+        zero representation. Brands like Plum and Dot&nbsp;&amp;&nbsp;Key are actively building customer loyalty
+        cycles in this high-replenishment category — loyalty that extends back to face care.
+      </div>
+    </div>
+    <div>
+      <div class="exec-rec-block-label">Supporting Data</div>
+      <div class="exec-rec-block-text">
+        <span class="exec-rec-data-pill">{body_care_comp_skus} competitor SKUs</span>
+        <span class="exec-rec-data-pill">{body_care_brands} brands active</span>
+        <span class="exec-rec-data-pill">Foxtale SKUs: 0</span>
+        <span class="exec-rec-data-pill">Opportunity Score: 35.9 / 100</span>
+        <br><br>
+        Plum leads with 16 Body Care SKUs (avg ₹448); Dot&nbsp;&amp;&nbsp;Key follows with 14 SKUs (avg ₹688).
+        The premium body-care tier above ₹795 is entirely uncontested.
+      </div>
+    </div>
+    <div>
+      <div class="exec-rec-block-label">Expected Business Impact</div>
+      <div class="exec-rec-impact">
+        📈 Higher wallet share per customer, increased repeat-purchase frequency, and category
+        expansion into a high-LTV adjacent segment. Cross-sell opportunity to existing face-care base
+        with zero incremental acquisition cost at launch.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Recommendation 2: Defend Serum Leadership ────────────────────── -->
+<div class="exec-rec-card priority-high">
+  <div class="exec-rec-header">
+    <div>
+      <div class="exec-rec-number">Recommendation 02</div>
+      <div class="exec-rec-title">Defend Serum Leadership</div>
+    </div>
+    <div class="priority-badge high">🔴 High Priority</div>
+  </div>
+  <div class="exec-rec-grid">
+    <div>
+      <div class="exec-rec-block-label">Why It Matters</div>
+      <div class="exec-rec-block-text">
+        Foxtale's serums carry the highest product ratings and strongest customer perception in the portfolio.
+        Minimalist has flooded the segment with {serum_comp_skus} competitor SKUs at value price points,
+        creating a constant price-anchoring pressure. Ceding ground here risks the brand's core premium identity.
+      </div>
+    </div>
+    <div>
+      <div class="exec-rec-block-label">Supporting Data</div>
+      <div class="exec-rec-block-text">
+        <span class="exec-rec-data-pill">Foxtale serum rating: {serum_foxtale_rating}★</span>
+        <span class="exec-rec-data-pill">{serum_comp_skus} competitor serum SKUs</span>
+        <span class="exec-rec-data-pill">Opportunity Score: 100 / 100</span>
+        <span class="exec-rec-data-pill">Avg price ₹1,118 vs ₹460 (Minimalist)</span>
+        <br><br>
+        All 5 brands compete in Serum — the most contested category in the dataset.
+        A step-up system (0.5% → 1% Retinol) locks customers into multi-SKU journeys.
+      </div>
+    </div>
+    <div>
+      <div class="exec-rec-block-label">Expected Business Impact</div>
+      <div class="exec-rec-impact">
+        📈 Strengthened brand differentiation, higher average order value through routine bundling,
+        and improved retention as customers commit to a structured multi-step regimen — a model
+        competitors cannot easily replicate at premium pricing.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Recommendation 3: Increase SKU Breadth ───────────────────────── -->
+<div class="exec-rec-card priority-med">
+  <div class="exec-rec-header">
+    <div>
+      <div class="exec-rec-number">Recommendation 03</div>
+      <div class="exec-rec-title">Increase SKU Breadth</div>
+    </div>
+    <div class="priority-badge med">🟠 Medium Priority</div>
+  </div>
+  <div class="exec-rec-grid">
+    <div>
+      <div class="exec-rec-block-label">Why It Matters</div>
+      <div class="exec-rec-block-text">
+        Foxtale's 45-SKU catalogue is the leanest in the competitive set. Competitors such as Plum
+        ({plum_skus} SKUs across 10 categories) offer significantly broader assortments, increasing
+        discovery surface, basket depth, and repeat-visit frequency on DTC and marketplace channels.
+      </div>
+    </div>
+    <div>
+      <div class="exec-rec-block-label">Supporting Data</div>
+      <div class="exec-rec-block-text">
+        <span class="exec-rec-data-pill">Foxtale: {foxtale_skus_count} SKUs, 6 categories</span>
+        <span class="exec-rec-data-pill">Plum: {plum_skus} SKUs, 10 categories</span>
+        <span class="exec-rec-data-pill">Gap: {sku_gap} SKUs behind market leader</span>
+        <span class="exec-rec-data-pill">7.5 avg SKUs/category (lowest in set)</span>
+        <br><br>
+        Priority expansion categories: Mask (0 Foxtale SKUs, 19 competitor), Peel, and Eye Care depth.
+        All reuse existing actives — no new R&amp;D pipeline required.
+      </div>
+    </div>
+    <div>
+      <div class="exec-rec-block-label">Expected Business Impact</div>
+      <div class="exec-rec-impact">
+        📈 Improved discoverability on search and recommendation algorithms, higher cross-sell
+        conversion, and broader category coverage that reduces dependency on any single hero SKU
+        for revenue concentration.
+      </div>
+    </div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
 # ─── FOOTER ─────────────────────────────────────────────────────────────────────
 st.markdown("""
 <div class="footer">
-    Foxtale Intelligence Platform &nbsp;&middot;&nbsp; Competitor Analysis &nbsp;&middot;&nbsp; June 2026
+    Foxtale Intelligence Platform &nbsp;&middot;&nbsp; Competitor Analysis &nbsp;&middot;&nbsp; June 2026 &nbsp;&middot;&nbsp; Prepared by Vivikta Kona
 </div>
 """, unsafe_allow_html=True)
