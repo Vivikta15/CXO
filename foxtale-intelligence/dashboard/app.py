@@ -561,6 +561,9 @@ scorecard = brand_stats.rename(
     }
 ).sort_values("Avg Rating", ascending=False).reset_index(drop=True)
 
+# Keep brand_stats aligned with scorecard so all chart code uses consistent column names
+brand_stats = scorecard.copy()
+
 st.dataframe(
     scorecard,
     use_container_width=True,
@@ -578,10 +581,22 @@ st.dataframe(
 )
 
 st.markdown("<div style='margin-top:20px'></div>", unsafe_allow_html=True)
+
+# Defensive: infer correct SKU column if name differs, warn if empty
+_sku_col = next(
+    (c for c in brand_stats.columns if "sku" in c.lower() or c.lower() == "total skus"),
+    None,
+)
+if brand_stats.empty or _sku_col is None:
+    st.warning("⚠️ No brand data available — check that products.csv is populated.")
+else:
+    if _sku_col != "Total SKUs":
+        brand_stats = brand_stats.rename(columns={_sku_col: "Total SKUs"})
+
 ch1, ch2 = st.columns(2)
 
 with ch1:
-    sku_data = brand_stats.sort_values("Total SKUs", ascending=True)
+    sku_data = brand_stats.sort_values("Total SKUs", ascending=True) if not brand_stats.empty else brand_stats
     bar_colors = [BRAND_COLORS.get(b, "#AAAAAA") for b in sku_data["Brand"]]
     fig_sku = go.Figure(
         go.Bar(
@@ -599,8 +614,9 @@ with ch1:
     st.plotly_chart(fig_sku, use_container_width=True)
 
 with ch2:
-    industry_avg_all = df_all["rating"].mean()
-    rating_data = brand_stats.sort_values("Avg Rating", ascending=False)
+    industry_avg_all = df_all["rating"].mean() if not df_all.empty else 0
+    _rating_col = next((c for c in brand_stats.columns if "rating" in c.lower()), "Avg Rating")
+    rating_data = brand_stats.sort_values(_rating_col, ascending=False) if not brand_stats.empty else brand_stats
     bar_colors2 = [BRAND_COLORS.get(b, "#AAAAAA") for b in rating_data["Brand"]]
     fig_rat = go.Figure()
     fig_rat.add_trace(
@@ -699,10 +715,12 @@ with pc1:
     st.plotly_chart(fig_heat, use_container_width=True)
 
 with pc2:
-    disc_data = brand_stats.sort_values("Avg Discount %", ascending=True)
+    _disc_col = next((c for c in brand_stats.columns if "discount" in c.lower()), "Avg Discount %")
+    disc_data = brand_stats.sort_values(_disc_col, ascending=True) if not brand_stats.empty else brand_stats
+    _brand_col = next((c for c in brand_stats.columns if "brand" in c.lower()), "Brand")
     disc_colors = [
         COLORS["accent"] if b == "Foxtale" else BRAND_COLORS.get(b, "#AAAAAA")
-        for b in disc_data["Brand"]
+        for b in disc_data.get(_brand_col, disc_data.get("Brand", []))
     ]
     fig_disc = go.Figure(
         go.Bar(
