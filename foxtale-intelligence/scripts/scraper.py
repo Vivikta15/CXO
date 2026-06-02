@@ -7,6 +7,7 @@ random delays between page loads.
 """
 
 import asyncio
+import os
 import re
 from typing import Any, Dict, List, Optional
 from urllib.parse import urljoin
@@ -304,6 +305,7 @@ async def _scrape_brand(
         user_agent=random_user_agent(),
         viewport={"width": 1440, "height": 900},
         locale="en-IN",
+        ignore_https_errors=True,
     )
 
     try:
@@ -320,12 +322,7 @@ async def _scrape_brand(
                 return await _scrape_page(p, b, bu, u, pn)
 
             try:
-                page_products = await retry_async(
-                    _fetch,
-                    retries=3,
-                    backoff=2.0,
-                    logger=logger,
-                )
+                page_products = await retry_async(retries=3, backoff=2.0)(_fetch)()
             except Exception as exc:
                 logger.error("Brand=%s page=%d: all retries exhausted — %s", brand, page_num, exc)
                 break
@@ -385,9 +382,15 @@ async def scrape_brands(
     all_products: List[Dict[str, Any]] = []
 
     async with async_playwright() as pw:
+        _chromium_candidates = [
+            "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
+            "/opt/pw-browsers/chromium-1117/chrome-linux/chrome",
+        ]
+        _exec = next((p for p in _chromium_candidates if os.path.exists(p)), None)
         browser: Browser = await pw.chromium.launch(
             headless=True,
             args=["--no-sandbox", "--disable-dev-shm-usage"],
+            **( {"executable_path": _exec} if _exec else {} ),
         )
 
         async def _run_brand(brand_name: str) -> List[Dict[str, Any]]:
