@@ -684,35 +684,38 @@ pc1, pc2 = st.columns(2)
 with pc1:
     pivot_price = df_all.pivot_table(values="price", index="brand", columns="category", aggfunc="mean")
     pivot_price = pivot_price.reindex(sorted(pivot_price.columns), axis=1)
-    z_vals = pivot_price.values
-    text_vals = [
-        [f"₹{int(v):,}" if not np.isnan(v) else "—" for v in row]
-        for row in z_vals
-    ]
-    fig_heat = go.Figure(
-        go.Heatmap(
-            z=z_vals,
-            x=list(pivot_price.columns),
-            y=list(pivot_price.index),
-            text=text_vals,
-            texttemplate="%{text}",
-            textfont=dict(size=9),
-            colorscale=[
-                [0.0, "#1A1A2E"],
-                [0.5, "#FFFFFF"],
-                [1.0, "#C0392B"],
-            ],
-            zmid=700,
-            colorbar=dict(
-                title="Avg Price ₹",
-                titlefont=dict(size=10),
-                tickfont=dict(size=9),
-            ),
+
+    if pivot_price.empty:
+        st.warning("⚠️ No pricing data available for heatmap.")
+    else:
+        z_vals = pivot_price.values
+        text_vals = [
+            [f"₹{int(v):,}" if not np.isnan(v) else "—" for v in row]
+            for row in z_vals
+        ]
+        fig_heat = go.Figure(
+            go.Heatmap(
+                z=z_vals,
+                x=list(pivot_price.columns),
+                y=list(pivot_price.index),
+                text=text_vals,
+                texttemplate="%{text}",
+                textfont=dict(size=9),
+                colorscale=[
+                    [0.0, "#1A1A2E"],
+                    [0.5, "#FFFFFF"],
+                    [1.0, "#C0392B"],
+                ],
+                zmid=700,
+                colorbar=dict(
+                    title=dict(text="Avg Price ₹", font=dict(size=10)),
+                    tickfont=dict(size=9),
+                ),
+            )
         )
-    )
-    chart_layout(fig_heat, "Price Heatmap — Category × Brand (₹)", height=380)
-    fig_heat.update_xaxes(tickangle=-35, tickfont=dict(size=9))
-    st.plotly_chart(fig_heat, use_container_width=True)
+        chart_layout(fig_heat, "Price Heatmap — Category × Brand (₹)", height=380)
+        fig_heat.update_xaxes(tickangle=-35, tickfont=dict(size=9))
+        st.plotly_chart(fig_heat, use_container_width=True)
 
 with pc2:
     _disc_col = next((c for c in brand_stats.columns if "discount" in c.lower()), "Avg Discount %")
